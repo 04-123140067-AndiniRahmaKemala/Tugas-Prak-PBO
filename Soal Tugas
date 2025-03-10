@@ -1,0 +1,190 @@
+# Kelas Robot
+
+class Robot:
+
+    def __init__(self, name, hp, attack):
+
+        # Inisialisasi Nama, HP, dan Nilai serangan robot
+
+        self.name = name
+
+        self.hp = hp
+
+        self.attack = attack
+
+
+
+    def attack_enemy(self, enemy):
+
+        # Mengatur akurasi serangan
+
+        attack_accuracy = random.randint(1, 10)
+
+        if attack_accuracy > 2: # 80% kemungkinan untuk mengenai 
+
+            damage = random.randint(1, self.attack) # Damage acak berdasarkan nilai srengan
+
+            enemy.hp -= damage #Mengurangi HP musuh
+
+            print(f"{self.name} menyerang {enemy.name} dan memberikan {damage} damage!")
+
+        else:
+
+            print(f"------------ {self.name} gagal menyerang ------------")
+
+
+
+    def regen_health(self):
+
+      # Robot mendapatkan regenerasi kesehatan
+
+        regen_amount = random.randint(5, 15) 
+
+        self.hp += regen_amount
+
+        print(f"{self.name} mendapatkan {regen_amount} HP kembali!")
+
+
+
+    def is_alive(self):
+
+        # Memeriksa apakah robot masih hidup
+
+        return self.hp > 0
+
+  
+
+    def __str__(self):
+
+        # Mengembalikan representasi string dari robot
+
+        return f"{self.name} [{self.hp}|{self.attack}]"
+
+
+
+# Kelas Game
+
+class Game:
+
+    def __init__(self, robot1, robot2):
+
+        # Inisialisasi dua robot dan ronde permainan
+
+        self.robot1 = robot1
+
+        self.robot2 = robot2
+
+        self.round = 1
+
+
+
+    def play(self):
+
+        #Mengatur jalannya permainan
+
+        while self.robot1.is_alive() and self.robot2.is_alive():
+
+            print(f"\nRound-{self.round} ==========================================================")
+
+            print(self.robot1)
+
+            print(self.robot2)
+
+
+
+            # Giliran robot 1
+
+            action = self.choose_action(self.robot1)
+
+            self.perform_action(action, self.robot1, self.robot2)
+
+
+
+            if not self.robot2.is_alive():
+
+                print(f"{self.robot1.name} menang!")
+
+                break
+
+
+
+            # Giliran robot 2
+
+            action = self.choose_action(self.robot2)
+
+            self.perform_action(action, self.robot2, self.robot1)
+
+
+
+            if not self.robot1.is_alive():
+
+                print(f"{self.robot2.name} menang!")
+
+                break
+
+
+
+            self.round += 1 # Menambah Ronde
+
+
+
+    def choose_action(self, robot):
+
+        # Menampilkan pilihan aksi untuk robot
+
+        print(f"\n{robot.name}, pilih aksi:")
+
+        print("1. Attack")
+
+        print("2. Regenerate Health")
+
+        print("3. Give up")
+
+        action = input("Pilih aksi (1/2/3): ")
+
+        return action
+
+
+
+    def perform_action(self, action, robot, enemy):
+
+        # Melakukan aksi berdasarkan pilihan pengguna
+
+        if action == '1':
+
+            robot.attack_enemy(enemy)
+
+        elif action == '2':
+
+            robot.regen_health()
+
+        elif action == '3':
+
+            print(f"{robot.name} menyerah!")
+
+            if robot == self.robot1:
+
+                print(f"{self.robot2.name} menang!") # Robot 2 menang jika robot 1 menyerah
+
+            else:
+
+                print(f"{self.robot1.name} menang!") # Robot 1 menang jika robot 2 menyerah
+
+
+
+# Contoh penggunaan
+
+if __name__ == "__main__":
+
+    robot1 = Robot("Broboy", 500, 10) #Membuat robot 1
+
+    robot2 = Robot("Boykhan", 750, 8) #Membuat robot 2
+
+
+
+    game = Game(robot1, robot2) # membuat instance permainan
+
+    game.play() # Memulai permainan
+
+
+
